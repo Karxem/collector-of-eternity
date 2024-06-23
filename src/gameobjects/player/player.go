@@ -46,17 +46,38 @@ func (p *Player) Update() {
 	speed := 3.0
 	var delta vector.Vector
 
-	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		delta.Y = speed
-	}
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
+		if p.PlayerPosition.Y <= -120 {
+			// log.Println("W:", "Out of bounds!")
+			return
+		}
+
 		delta.Y = -speed
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
+		if p.PlayerPosition.X <= -frameWidth {
+			// log.Println("A:", "Out of bounds!")
+			return
+		}
+
 		delta.X = -speed
 		p.PlayerDirection = -1
 	}
+	if ebiten.IsKeyPressed(ebiten.KeyS) {
+		if p.PlayerPosition.Y >= float64(p.ScreenHeight)+frameHeight {
+			// log.Println("S:", "Out of bounds!")
+			return
+		}
+
+		delta.Y = speed
+	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
+		// TODO: Find out why this needs to be a magix number
+		if p.PlayerPosition.X >= float64(p.ScreenWidth)+350 {
+			// log.Println("D:", "Out of bounds!")
+			return
+		}
+
 		delta.X = speed
 		p.PlayerDirection = 1
 	}

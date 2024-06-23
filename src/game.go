@@ -6,24 +6,18 @@ import (
 	_ "image/jpeg" // Ensure JPEG format is recognized
 	_ "image/png"  // Ensure PNG format is recognized
 	"log"
+	"pick-it-up/gameobjects/player"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 const (
-	screenWidth  = 640
-	screenHeight = 360
-
-	frameOX     = 0   // X-coordinate of the first frame
-	frameOY     = 0   // Y-coordinate of the first frame (updated to start from the top)
-	frameWidth  = 100 // Width of each frame
-	frameHeight = 100 // Height of each frame
-	frameCount  = 6   // Number of frames in the spritesheet
-	scaleFactor = 4   // Factor to scale up the sprite
+	ScreenWidth  = 640
+	ScreenHeight = 360
 )
 
 type Game struct {
-	count int
+	player *player.Player
 }
 
 //go:embed assets/*
@@ -31,22 +25,12 @@ var assets embed.FS
 var playerImage *ebiten.Image
 
 func (g *Game) Update() error {
-	g.count++
+	g.player.Update()
 	return nil
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	op := &ebiten.DrawImageOptions{}
-	i := (g.count / 5) % frameCount
-	sx, sy := frameOX+i*frameWidth, frameOY
-
-	// Scale up the Sprite
-	op.GeoM.Scale(scaleFactor, scaleFactor)
-
-	// Poistion the Sprite
-	op.GeoM.Translate(screenWidth-(frameWidth*scaleFactor)/2, screenHeight-(frameHeight*scaleFactor)/2)
-
-	screen.DrawImage(playerImage.SubImage(image.Rect(sx, sy, sx+frameWidth, sy+frameHeight)).(*ebiten.Image), op)
+	g.player.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {
@@ -54,11 +38,15 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	playerImage = loadImage("Characters/Lancer/Lancer-Idle.png")
+	playerImage = loadImage("Characters/Knight/Knight-Idle.png")
 
-	ebiten.SetWindowSize(screenWidth*2, screenHeight*2)
+	g := &Game{
+		player: player.NewPlayer(playerImage, 6, ScreenWidth, ScreenHeight),
+	}
+
+	ebiten.SetWindowSize(ScreenWidth*2, ScreenHeight*2)
 	ebiten.SetWindowTitle("Pick it up")
-	if err := ebiten.RunGame(&Game{}); err != nil {
+	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
 	}
 }

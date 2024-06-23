@@ -3,6 +3,7 @@ package player
 import (
 	"image"
 	"math"
+	"pick-it-up/libs/animation"
 	"pick-it-up/libs/vector"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -16,15 +17,10 @@ const (
 	scaleFactor = 4   // Factor to scale up the sprite
 )
 
-type Animation struct {
-	Image      *ebiten.Image
-	FrameCount int
-}
-
 type Player struct {
-	IdleAnimation   Animation
-	WalkAnimation   Animation
-	CurrentAnim     *Animation
+	IdleAnimation   animation.Animation
+	WalkAnimation   animation.Animation
+	CurrentAnim     *animation.Animation
 	Count           int
 	PlayerPosition  vector.Vector
 	PlayerDirection int
@@ -33,14 +29,14 @@ type Player struct {
 }
 
 func NewPlayer(idleImage, walkImage *ebiten.Image, idleFrameCount, walkFrameCount, screenWidth, screenHeight int) *Player {
-	idleAnim := Animation{Image: idleImage, FrameCount: idleFrameCount}
-	walkAnim := Animation{Image: walkImage, FrameCount: walkFrameCount}
+	idleAnim := animation.Animation{Image: idleImage, FrameCount: idleFrameCount}
+	walkAnim := animation.Animation{Image: walkImage, FrameCount: walkFrameCount}
 
 	return &Player{
 		IdleAnimation:  idleAnim,
 		WalkAnimation:  walkAnim,
-		CurrentAnim:    &idleAnim,
-		Count:          0,
+		CurrentAnim:    &idleAnim, // Defaults to the idle animation
+		Count:          0,         // Determines the current animation frame
 		PlayerPosition: vector.Vector{X: float64(screenWidth - (frameWidth*scaleFactor)/2), Y: float64(screenHeight - (frameHeight*scaleFactor)/2)},
 		ScreenWidth:    screenWidth,
 		ScreenHeight:   screenHeight,

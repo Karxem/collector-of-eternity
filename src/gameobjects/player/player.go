@@ -28,15 +28,12 @@ type Player struct {
 	ScreenHeight    int
 }
 
-func NewPlayer(idleImage, walkImage *ebiten.Image, idleFrameCount, walkFrameCount, screenWidth, screenHeight int) *Player {
-	idleAnim := animation.Animation{Image: idleImage, FrameCount: idleFrameCount}
-	walkAnim := animation.Animation{Image: walkImage, FrameCount: walkFrameCount}
-
+func NewPlayer(idleAnimation, walkAnimation animation.Animation, screenWidth, screenHeight int) *Player {
 	return &Player{
-		IdleAnimation:  idleAnim,
-		WalkAnimation:  walkAnim,
-		CurrentAnim:    &idleAnim, // Defaults to the idle animation
-		Count:          0,         // Determines the current animation frame
+		IdleAnimation:  idleAnimation,
+		WalkAnimation:  walkAnimation,
+		CurrentAnim:    &idleAnimation, // Defaults to the idle animation
+		Count:          0,              // Determines the current animation frame
 		PlayerPosition: vector.Vector{X: float64(screenWidth - (frameWidth*scaleFactor)/2), Y: float64(screenHeight - (frameHeight*scaleFactor)/2)},
 		ScreenWidth:    screenWidth,
 		ScreenHeight:   screenHeight,

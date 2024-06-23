@@ -6,6 +6,7 @@ import (
 	_ "image/png" // Ensure PNG format is recognized
 	"log"
 	"pick-it-up/gameobjects/player"
+	"pick-it-up/libs/animation"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -22,9 +23,6 @@ type Game struct {
 //go:embed assets/*
 var assets embed.FS
 
-var idleImage *ebiten.Image
-var walkImage *ebiten.Image
-
 func (g *Game) Update() error {
 	g.player.Update()
 	return nil
@@ -39,11 +37,11 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	idleImage = loadImage("Characters/Archer/Archer-Idle.png")
-	walkImage = loadImage("Characters/Archer/Archer-Walk.png")
+	idleAnimation := animation.Animation{Image: loadImage("Characters/Knight/Knight-Idle.png"), FrameCount: 6}
+	walkAnimation := animation.Animation{Image: loadImage("Characters/Knight/Knight-Walk.png"), FrameCount: 8}
 
 	g := &Game{
-		player: player.NewPlayer(idleImage, walkImage, 6, 8, ScreenWidth, ScreenHeight),
+		player: player.NewPlayer(idleAnimation, walkAnimation, ScreenWidth, ScreenHeight),
 	}
 
 	// Set Window size and title

@@ -3,8 +3,7 @@ package main
 import (
 	"embed"
 	"image"
-	_ "image/jpeg" // Ensure JPEG format is recognized
-	_ "image/png"  // Ensure PNG format is recognized
+	_ "image/png" // Ensure PNG format is recognized
 	"log"
 	"pick-it-up/gameobjects/player"
 
@@ -22,7 +21,9 @@ type Game struct {
 
 //go:embed assets/*
 var assets embed.FS
-var playerImage *ebiten.Image
+
+var idleImage *ebiten.Image
+var walkImage *ebiten.Image
 
 func (g *Game) Update() error {
 	g.player.Update()
@@ -38,19 +39,23 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 }
 
 func main() {
-	playerImage = loadImage("Characters/Knight/Knight-Idle.png")
+	idleImage = loadImage("Characters/Archer/Archer-Idle.png")
+	walkImage = loadImage("Characters/Archer/Archer-Walk.png")
 
 	g := &Game{
-		player: player.NewPlayer(playerImage, 6, ScreenWidth, ScreenHeight),
+		player: player.NewPlayer(idleImage, walkImage, 6, 8, ScreenWidth, ScreenHeight),
 	}
 
+	// Set Window size and title
 	ebiten.SetWindowSize(ScreenWidth*2, ScreenHeight*2)
-	ebiten.SetWindowTitle("Pick it up")
+	ebiten.SetWindowTitle("Pick it up!")
+
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)
 	}
 }
 
+// Used to load image assets from the embeded assets folder
 func loadImage(name string) *ebiten.Image {
 	file, err := assets.Open("assets/" + name)
 	if err != nil {

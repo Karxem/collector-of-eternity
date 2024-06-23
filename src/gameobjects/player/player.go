@@ -3,7 +3,7 @@ package player
 import (
 	"image"
 	"math"
-	"pick-it-up/geometries/vector"
+	"pick-it-up/libs/vector"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -16,20 +16,31 @@ const (
 	scaleFactor = 4   // Factor to scale up the sprite
 )
 
-type Player struct {
-	Image          *ebiten.Image
-	Count          int
-	FrameCount     int
-	PlayerPosition vector.Vector
-	ScreenWidth    int
-	ScreenHeight   int
+type Animation struct {
+	Image      *ebiten.Image
+	FrameCount int
 }
 
-func NewPlayer(image *ebiten.Image, frameCount int, screenWidth, screenHeight int) *Player {
+type Player struct {
+	IdleAnimation   Animation
+	WalkAnimation   Animation
+	CurrentAnim     *Animation
+	Count           int
+	PlayerPosition  vector.Vector
+	PlayerDirection int
+	ScreenWidth     int
+	ScreenHeight    int
+}
+
+func NewPlayer(idleImage, walkImage *ebiten.Image, idleFrameCount, walkFrameCount, screenWidth, screenHeight int) *Player {
+	idleAnim := Animation{Image: idleImage, FrameCount: idleFrameCount}
+	walkAnim := Animation{Image: walkImage, FrameCount: walkFrameCount}
+
 	return &Player{
-		Image:          image,
+		IdleAnimation:  idleAnim,
+		WalkAnimation:  walkAnim,
+		CurrentAnim:    &idleAnim,
 		Count:          0,
-		FrameCount:     frameCount,
 		PlayerPosition: vector.Vector{X: float64(screenWidth - (frameWidth*scaleFactor)/2), Y: float64(screenHeight - (frameHeight*scaleFactor)/2)},
 		ScreenWidth:    screenWidth,
 		ScreenHeight:   screenHeight,
@@ -42,17 +53,19 @@ func (p *Player) Update() {
 	speed := 3.0
 	var delta vector.Vector
 
-	if ebiten.IsKeyPressed(ebiten.KeyDown) {
+	if ebiten.IsKeyPressed(ebiten.KeyS) {
 		delta.Y = speed
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyUp) {
+	if ebiten.IsKeyPressed(ebiten.KeyW) {
 		delta.Y = -speed
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyLeft) {
+	if ebiten.IsKeyPressed(ebiten.KeyA) {
 		delta.X = -speed
+		p.PlayerDirection = -1
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyRight) {
+	if ebiten.IsKeyPressed(ebiten.KeyD) {
 		delta.X = speed
+		p.PlayerDirection = 1
 	}
 
 	// Check for diagonal movement
@@ -62,6 +75,13 @@ func (p *Player) Update() {
 		delta.Y *= factor
 	}
 
+	// Change animation based on movement
+	if delta.X != 0 || delta.Y != 0 {
+		p.CurrentAnim = &p.WalkAnimation
+	} else {
+		p.CurrentAnim = &p.IdleAnimation
+	}
+
 	p.PlayerPosition.X += delta.X
 	p.PlayerPosition.Y += delta.Y
 }
@@ -69,14 +89,19 @@ func (p *Player) Update() {
 func (p *Player) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 
-	// Set scale
-	op.GeoM.Scale(scaleFactor, scaleFactor)
+	// Set scale based on direction
+	if p.PlayerDirection == -1 {
+		op.GeoM.Scale(-scaleFactor, scaleFactor)              // Mirror horizontally
+		op.GeoM.Translate(float64(frameWidth*scaleFactor), 0) // Adjust translation
+	} else {
+		op.GeoM.Scale(scaleFactor, scaleFactor)
+	}
 
 	// Calculate position
-	i := (p.Count / 5) % p.FrameCount
+	i := (p.Count / 5) % p.CurrentAnim.FrameCount
 	sx, sy := frameOX+i*frameWidth, frameOY
 	op.GeoM.Translate(p.PlayerPosition.X, p.PlayerPosition.Y)
 
 	// Draw the scaled image
-	screen.DrawImage(p.Image.SubImage(image.Rect(sx, sy, sx+frameWidth, sy+frameHeight)).(*ebiten.Image), op)
+	screen.DrawImage(p.CurrentAnim.Image.SubImage(image.Rect(sx, sy, sx+frameWidth, sy+frameHeight)).(*ebiten.Image), op)
 }

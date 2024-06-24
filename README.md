@@ -12,8 +12,9 @@ Choosing a more light engine gives the opportunity to learn concepts from ground
 
 Go got similiar benchmarks to compiled languages like C or C++, but has the simplicity of a garbage collected language.
 
-# Inheritance over Composition
-I chose to not include a Entity Component System since part of this project is to get a deeper dive into the practice of inheritance.
+# Composition over Inheritance
+There are no classes in go and you can say, that there is no inheritance concept in either.
+Go uses a concept called composition where a struct is used to form other objects.
 
 ## Running the Game
 

@@ -7,6 +7,7 @@ import (
 	"pick-it-up/libs/vector"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 const (
@@ -20,76 +21,88 @@ const (
 type Player struct {
 	IdleAnimation   animation.Animation
 	WalkAnimation   animation.Animation
+	AttackAnimation animation.Animation
 	CurrentAnim     *animation.Animation
-	Count           int
+	AnimationFrame  int
 	PlayerPosition  vector.Vector
 	PlayerDirection int
 	ScreenWidth     int
 	ScreenHeight    int
+	IsAttacking     bool // New field to track attacking state
 }
 
-func NewPlayer(idleAnimation, walkAnimation animation.Animation, screenWidth, screenHeight int) *Player {
+func NewPlayer(idleAnimation, walkAnimation, attackAnimation animation.Animation, screenWidth, screenHeight int) *Player {
 	return &Player{
-		IdleAnimation:  idleAnimation,
-		WalkAnimation:  walkAnimation,
-		CurrentAnim:    &idleAnimation, // Defaults to the idle animation
-		Count:          0,              // Determines the current animation frame
-		PlayerPosition: vector.Vector{X: float64(screenWidth - (frameWidth*scaleFactor)/2), Y: float64(screenHeight - (frameHeight*scaleFactor)/2)},
-		ScreenWidth:    screenWidth,
-		ScreenHeight:   screenHeight,
+		IdleAnimation:   idleAnimation,
+		WalkAnimation:   walkAnimation,
+		AttackAnimation: attackAnimation,
+		CurrentAnim:     &idleAnimation, // Defaults to the idle animation
+		AnimationFrame:  0,              // Determines the current animation frame
+		PlayerPosition:  vector.Vector{X: float64(screenWidth - (frameWidth*scaleFactor)/2), Y: float64(screenHeight - (frameHeight*scaleFactor)/2)},
+		ScreenWidth:     screenWidth,
+		ScreenHeight:    screenHeight,
+		IsAttacking:     false,
 	}
 }
 
 func (p *Player) Update() {
-	p.Count++
+	if p.IsAttacking {
+		p.AnimationFrame++
+		if p.AnimationFrame >= p.AttackAnimation.FrameCount*5 {
+			p.IsAttacking = false
+			p.AnimationFrame = 0
+		}
+
+		return
+	}
 
 	speed := 3.0
 	var delta vector.Vector
 
+	if inpututil.IsKeyJustPressed(ebiten.KeySpace) {
+		p.IsAttacking = true
+		p.AnimationFrame = 0
+		p.CurrentAnim = &p.AttackAnimation
+		return
+	}
+
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
-		if p.PlayerPosition.Y <= -120 {
+		if p.PlayerPosition.Y <= -float64(frameHeight)-float64(frameHeight)/2 {
 			// log.Println("W:", "Out of bounds!")
 			return
 		}
-
 		delta.Y = -speed
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		if p.PlayerPosition.X <= -frameWidth {
+		if p.PlayerPosition.X <= -float64(frameWidth)-float64(frameWidth)/2 {
 			// log.Println("A:", "Out of bounds!")
 			return
 		}
-
 		delta.X = -speed
 		p.PlayerDirection = -1
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
-		if p.PlayerPosition.Y >= float64(p.ScreenHeight)+frameHeight {
+		if p.PlayerPosition.Y >= float64(p.ScreenHeight)+float64(frameHeight)/2 {
 			// log.Println("S:", "Out of bounds!")
 			return
 		}
-
 		delta.Y = speed
 	}
 	if ebiten.IsKeyPressed(ebiten.KeyD) {
-		// TODO: Find out why this needs to be a magix number
-		if p.PlayerPosition.X >= float64(p.ScreenWidth)+350 {
+		if p.PlayerPosition.X >= float64(p.ScreenWidth)+float64(p.ScreenWidth)/2 {
 			// log.Println("D:", "Out of bounds!")
 			return
 		}
-
 		delta.X = speed
 		p.PlayerDirection = 1
 	}
 
-	// Check for diagonal movement
 	if delta.X != 0 && delta.Y != 0 {
 		factor := speed / math.Sqrt(delta.X*delta.X+delta.Y*delta.Y)
 		delta.X *= factor
 		delta.Y *= factor
 	}
 
-	// Change animation based on movement
 	if delta.X != 0 || delta.Y != 0 {
 		p.CurrentAnim = &p.WalkAnimation
 	} else {
@@ -98,6 +111,8 @@ func (p *Player) Update() {
 
 	p.PlayerPosition.X += delta.X
 	p.PlayerPosition.Y += delta.Y
+	p.AnimationFrame++
+	p.AnimationFrame %= p.CurrentAnim.FrameCount * 5
 }
 
 func (p *Player) Draw(screen *ebiten.Image) {
@@ -112,7 +127,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	}
 
 	// Calculate position
-	i := (p.Count / 5) % p.CurrentAnim.FrameCount
+	i := (p.AnimationFrame / 5) % p.CurrentAnim.FrameCount
 	sx, sy := frameOX+i*frameWidth, frameOY
 	op.GeoM.Translate(p.PlayerPosition.X, p.PlayerPosition.Y)
 

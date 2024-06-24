@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	ScreenWidth  = 640
-	ScreenHeight = 360
+	ScreenWidth  = 500
+	ScreenHeight = 300
 )
 
 type Game struct {
@@ -39,9 +39,10 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeigh
 func main() {
 	idleAnimation := animation.Animation{Image: loadImage("Characters/Knight/Knight-Idle.png"), FrameCount: 6}
 	walkAnimation := animation.Animation{Image: loadImage("Characters/Knight/Knight-Walk.png"), FrameCount: 8}
+	attackAnimation := animation.Animation{Image: loadImage("Characters/Knight/Knight-Attack02.png"), FrameCount: 10}
 
 	g := &Game{
-		player: player.NewPlayer(idleAnimation, walkAnimation, ScreenWidth, ScreenHeight),
+		player: player.NewPlayer(idleAnimation, walkAnimation, attackAnimation, ScreenWidth, ScreenHeight),
 	}
 
 	// Set Window size and title

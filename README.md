@@ -1,5 +1,5 @@
-[![Conventional Commits](https://github.com/Karxem/pick-it-up/actions/workflows/commit-lint.yml/badge.svg?branch=main)](https://github.com/Karxem/pick-it-up/actions/workflows/commit-lint.yml)
-# Pick it up - Top Down Game
+[![Conventional Commits](https://github.com/Karxem/collector-of-eternity/actions/workflows/commit-lint.yml/badge.svg?branch=main)](https://github.com/Karxem/collector-of-eternity/actions/workflows/commit-lint.yml)
+# Collector of Eternity - Top Down Game
 
 Pik it up is a small top down rts game that utilizes the ebitengine (formerly ebiten), a simple 2d game engine for go.
 
@@ -51,7 +51,7 @@ Before running the game, ensure you have the following installed:
 
 ## Contributing
 
-If you'd like to contribute to Pick it up, please fork the repository and create a pull request. 
+If you'd like to contribute to Collector of Eternity, please fork the repository and create a pull request. 
 
 ## License
 

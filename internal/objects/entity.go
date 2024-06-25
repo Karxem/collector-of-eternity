@@ -14,17 +14,14 @@ type Entity struct {
 	AnimationFrame   int
 
 	// TODO: Use AnimationSet
-	IdleAnimation  libs.Animation
-	WalkAnimation  libs.Animation
-	HurtAnimation  libs.Animation
-	DeathAnimation libs.Animation
+	Animations libs.AnimationSet
 }
 
-func NewEntity(position libs.Vector, idleAnimation libs.Animation) *Entity {
+func NewEntity(position libs.Vector, animations libs.AnimationSet) *Entity {
 	return &Entity{
 		GameObject:       *NewGameObject(position),
-		IdleAnimation:    idleAnimation,
-		CurrentAnimation: idleAnimation,
+		Animations:       animations,
+		CurrentAnimation: animations.Animations["idle"],
 		AnimationFrame:   0,
 	}
 }

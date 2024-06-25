@@ -32,7 +32,7 @@ func (r Rect) Intersects(other Rect) bool {
 		other.Y <= r.MaxY()
 }
 
-// Check collision with an fixed position
+// Check collision with an adjusted position
 func (r Rect) IntersectsAt(other Rect, offsetX, offsetY float64) bool {
 	adjustedRect := Rect{
 		X:      r.X + offsetX,

@@ -28,7 +28,7 @@ func (s *TestScene) Update() error {
 	s.Skeleton.Update()
 
 	if s.Player.BoundingBox.Intersects(s.Skeleton.BoundingBox) {
-		log.Println("Collision")
+		log.Println("Intersection:", s.Player.Position)
 	}
 
 	return nil

@@ -1,33 +1,30 @@
 package game
 
 import (
-	assets "pick-it-up"
-	"pick-it-up/internal/libs"
-	"pick-it-up/internal/objects"
+	"pick-it-up/internal/scenes"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type Game struct {
-	Player objects.Player
+	SceneManager scenes.SceneManager
 }
 
 func NewGame() *Game {
-	player := objects.NewPlayer(libs.Vector{X: float64(500 - (100*4)/2), Y: float64(300 - (100*4)/2)}, assets.PlayerAnimations)
+	testScene := scenes.NewTestScene()
+	sceneManager := scenes.NewSceneManager(testScene)
 	return &Game{
-		Player: *player,
+		SceneManager: *sceneManager,
 	}
 
 }
 
 func (g *Game) Update() error {
-	g.Player.Update()
-
-	return nil
+	return g.SceneManager.Update()
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
-	g.Player.Draw(screen)
+	g.SceneManager.Draw(screen)
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (screenWidth, screenHeight int) {

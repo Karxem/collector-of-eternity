@@ -10,6 +10,7 @@ import (
 type Entity struct {
 	GameObject
 	libs.FrameData
+	BoundingBox      libs.Rect
 	CurrentAnimation libs.Animation
 	AnimationFrame   int
 	Animations       libs.AnimationSet
@@ -19,6 +20,7 @@ type Entity struct {
 func NewEntity(position libs.Vector, animations libs.AnimationSet) *Entity {
 	return &Entity{
 		GameObject:       *NewGameObject(position),
+		BoundingBox:      libs.NewRect(position.X, position.Y, 100, 100), // FIXME: Magic number
 		Animations:       animations,
 		CurrentAnimation: animations.Animations["idle"],
 		AnimationFrame:   0,
@@ -29,6 +31,10 @@ func NewEntity(position libs.Vector, animations libs.AnimationSet) *Entity {
 func (e *Entity) Update() {
 	e.AnimationFrame++
 	e.AnimationFrame %= e.CurrentAnimation.FrameCount * 5
+
+	if e.Position.X != e.BoundingBox.X || e.Position.Y != e.BoundingBox.Y {
+		e.UpdateBoundingBox()
+	}
 
 	// log.Printf("Position: (%f, %f), Frame: %d", e.Position.X, e.Position.Y, e.AnimationFrame)
 }
@@ -52,4 +58,9 @@ func (e *Entity) Draw(screen *ebiten.Image) {
 	screen.DrawImage(e.CurrentAnimation.Image.SubImage(image.Rect(sx, sy, sx+e.CurrentAnimation.FrameWidth, sy+e.CurrentAnimation.FrameHeight)).(*ebiten.Image), op)
 
 	// log.Printf("Drawing frame: %d at position: (%f, %f)", e.AnimationFrame, e.Position.X, e.Position.Y)
+}
+
+func (e *Entity) UpdateBoundingBox() {
+	e.BoundingBox.X = e.Position.X
+	e.BoundingBox.Y = e.Position.Y
 }

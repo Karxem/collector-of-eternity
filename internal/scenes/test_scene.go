@@ -1,6 +1,7 @@
 package scenes
 
 import (
+	"log"
 	assets "pick-it-up"
 	"pick-it-up/internal/libs"
 	"pick-it-up/internal/objects"
@@ -25,6 +26,11 @@ func NewTestScene() *TestScene {
 func (s *TestScene) Update() error {
 	s.Player.Update()
 	s.Skeleton.Update()
+
+	if s.Player.BoundingBox.Intersects(s.Skeleton.BoundingBox) {
+		log.Println("Collision")
+	}
+
 	return nil
 }
 

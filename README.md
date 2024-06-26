@@ -1,7 +1,7 @@
 [![Conventional Commits](https://github.com/Karxem/collector-of-eternity/actions/workflows/commit-lint.yml/badge.svg?branch=main)](https://github.com/Karxem/collector-of-eternity/actions/workflows/commit-lint.yml)
 # Collector of Eternity - Top Down Game
 
-Pik it up is a small top down rts game that utilizes the ebitengine (formerly ebiten), a simple 2d game engine for go.
+Collector of Eternity is a small top down rts game that utilizes the ebitengine (formerly ebiten), a simple 2d game engine for go.
 
 # Why? - Chosen Technologies
 
@@ -29,8 +29,8 @@ Before running the game, ensure you have the following installed:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/Karxem/pick-it-up.git
-   cd pick-it-up
+   git clone https://github.com/Karxem/collector-of-eternity.git
+   cd collector-of-eternity
    ```
 
 2. **Run the game:**
@@ -44,7 +44,7 @@ Before running the game, ensure you have the following installed:
 3. **Build for release:**
 
    ```bash
-   go build -o ../dist/pick-it-up.exe
+   go build -o ../dist/collector-of-eternity.exe
    ```
 
    This command will compile the project to the dist folder.

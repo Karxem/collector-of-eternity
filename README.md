@@ -51,7 +51,9 @@ Before running the game, ensure you have the following installed:
 
 ## Contributing
 
-If you'd like to contribute to Collector of Eternity, please fork the repository and create a pull request. 
+If you'd like to contribute to Collector of Eternity, please fork the repository and create a pull request.
+
+**Notice:** Semantic commits are enforced with a pipeline. Only the following commit scopes are allowed: `feat`, `fix`, `chore`, `refactor`, `build`, `ci`, `docs`.
 
 ## License
 

@@ -11,9 +11,9 @@ type Player struct {
 	Entity
 }
 
-func NewPlayer(position libs.Vector, animations libs.AnimationSet) *Player {
+func NewPlayer(position libs.Vector, boundingBoxWidth, boundingBoxHeight int, animations libs.AnimationSet) *Player {
 	return &Player{
-		Entity: *NewEntity(position, animations),
+		Entity: *NewEntity(position, boundingBoxWidth, boundingBoxHeight, animations),
 	}
 }
 

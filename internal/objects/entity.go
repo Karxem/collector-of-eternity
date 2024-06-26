@@ -17,10 +17,10 @@ type Entity struct {
 	Direction        int
 }
 
-func NewEntity(position libs.Vector, animations libs.AnimationSet) *Entity {
+func NewEntity(position libs.Vector, boundingBoxWidth, boundingBoxHeight int, animations libs.AnimationSet) *Entity {
 	return &Entity{
 		GameObject:       *NewGameObject(position),
-		BoundingBox:      libs.NewRect(position.X, position.Y, 100, 100), // FIXME: Magic number
+		BoundingBox:      libs.NewRect(position.X, position.Y, float64(boundingBoxWidth), float64(boundingBoxHeight)),
 		Animations:       animations,
 		CurrentAnimation: animations.Animations["idle"],
 		AnimationFrame:   0,

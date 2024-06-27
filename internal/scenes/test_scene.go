@@ -35,7 +35,7 @@ type TestScene struct {
 }
 
 func NewTestScene() *TestScene {
-	player := objects.NewPlayer(libs.Vector{X: float64(400 - (100*4)/2), Y: float64(300 - (100*4)/2)}, 50, 50, assets.AxemanAnimations)
+	player := objects.NewPlayer(libs.Vector{X: float64(400 - (100*4)/2), Y: float64(300 - (100*4)/2)}, 50, 50, assets.PlayerAnimations)
 	skeleton := objects.NewEntity(libs.Vector{X: float64(600 - (100*4)/2), Y: float64(300 - (100*4)/2)}, 50, 50, assets.SkeletonAnimations)
 	collisionHandler := systems.NewCollisionHandler()
 
@@ -65,6 +65,6 @@ func (s *TestScene) Update() error {
 func (s *TestScene) Draw(screen *ebiten.Image) {
 	s.Dungeon.Draw(screen)
 
-	s.Player.Draw(screen)
 	s.Skeleton.Draw(screen)
+	s.Player.Draw(screen)
 }

@@ -19,11 +19,11 @@ var (
 
 func init() {
 	PlayerAnimations = *libs.NewAnimationSet()
-	PlayerAnimations.AddAnimation("idle", *libs.NewAnimation(LoadImage("Characters/Knight/Knight-Idle.png"), libs.FrameData{FrameCount: 6, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
-	PlayerAnimations.AddAnimation("walk", *libs.NewAnimation(LoadImage("Characters/Knight/Knight-Walk.png"), libs.FrameData{FrameCount: 4, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
-	PlayerAnimations.AddAnimation("primary-attack", *libs.NewAnimation(LoadImage("Characters/Knight/Knight-Attack01.png"), libs.FrameData{FrameCount: 7, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
-	PlayerAnimations.AddAnimation("secondary-attack", *libs.NewAnimation(LoadImage("Characters/Knight/Knight-Attack02.png"), libs.FrameData{FrameCount: 10, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
-	PlayerAnimations.AddAnimation("heavy-attack", *libs.NewAnimation(LoadImage("Characters/Knight/Knight-Attack03.png"), libs.FrameData{FrameCount: 11, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
+	PlayerAnimations.AddAnimation("idle", *libs.NewAnimation(LoadImage("Characters/Armored Axeman/Armored Axeman-Idle.png"), libs.FrameData{FrameCount: 6, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
+	PlayerAnimations.AddAnimation("walk", *libs.NewAnimation(LoadImage("Characters/Armored Axeman/Armored Axeman-Walk.png"), libs.FrameData{FrameCount: 8, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
+	PlayerAnimations.AddAnimation("primary-attack", *libs.NewAnimation(LoadImage("Characters/Armored Axeman/Armored Axeman-Attack01.png"), libs.FrameData{FrameCount: 9, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
+	PlayerAnimations.AddAnimation("secondary-attack", *libs.NewAnimation(LoadImage("Characters/Armored Axeman/Armored Axeman-Attack02.png"), libs.FrameData{FrameCount: 9, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
+	PlayerAnimations.AddAnimation("heavy-attack", *libs.NewAnimation(LoadImage("Characters/Armored Axeman/Armored Axeman-Attack03.png"), libs.FrameData{FrameCount: 12, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
 
 	SkeletonAnimations = *libs.NewAnimationSet()
 	SkeletonAnimations.AddAnimation("idle", *libs.NewAnimation(LoadImage("Characters/Skeleton/Skeleton-Idle.png"), libs.FrameData{FrameCount: 6, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))

@@ -23,9 +23,8 @@ func NewPlayer(position libs.Vector, boundingBoxWidth, boundingBoxHeight int, an
 }
 
 func (p *Player) Update() {
-	move(p)
-	usePrimaryAttack(p)
-	useSecondaryAttack(p)
+	moveInputListener(p)
+	useAttackMoves(p)
 
 	p.Entity.Update()
 }
@@ -34,7 +33,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 	p.Entity.Draw(screen)
 }
 
-func move(p *Player) {
+func moveInputListener(p *Player) {
 	/*
 		TODO: This prevents the current animation to get set to idle when not moving.
 			   The current state of the player should be handled by something like state machine that prevents inputs on certain states.
@@ -78,16 +77,15 @@ func move(p *Player) {
 	p.Position.Y += delta.Y
 }
 
-func usePrimaryAttack(p *Player) {
+func useAttackMoves(p *Player) {
 	if p.IsAttacking {
 		p.AttackFrame++
 
 		p.AnimationFrame++ // Increment animation frame
-		p.AnimationFrame %= p.CurrentAnimation.FrameCount * 5
 
 		// Check if the attack animation has completed
-		var animFrames = p.Animations.Animations["primary-attack"].FrameCount
-		if p.AttackFrame >= animFrames*animFrames/2 {
+		var animFrames = p.CurrentAnimation.FrameCount
+		if p.AttackFrame >= animFrames*2 {
 			p.IsAttacking = false
 			p.CurrentAnimation = p.Animations.Animations["idle"]
 		}
@@ -100,27 +98,15 @@ func usePrimaryAttack(p *Player) {
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}
-}
-
-func useSecondaryAttack(p *Player) {
-	if p.IsAttacking {
-		p.AttackFrame++ // Increment the attack frame while attacking
-
-		p.AnimationFrame++ // Increment animation frame
-		p.AnimationFrame %= p.CurrentAnimation.FrameCount * 5
-
-		// Check if the attack animation has completed
-		var animFrames = p.Animations.Animations["secondary-attack"].FrameCount
-		if p.AttackFrame >= animFrames*animFrames/2 {
-			p.IsAttacking = false
-			p.CurrentAnimation = p.Animations.Animations["idle"]
-		}
-		return
-	}
-
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonRight) {
 		p.IsAttacking = true
 		p.CurrentAnimation = p.Animations.Animations["secondary-attack"]
+		p.AttackFrame = 0 // Reset the attack frame counter
+		p.Entity.AnimationFrame = 0
+	}
+	if inpututil.IsKeyJustReleased(ebiten.KeySpace) {
+		p.IsAttacking = true
+		p.CurrentAnimation = p.Animations.Animations["heavy-attack"]
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}

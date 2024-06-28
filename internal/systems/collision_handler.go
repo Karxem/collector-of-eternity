@@ -3,8 +3,6 @@ package systems
 import (
 	"log"
 	"pick-it-up/internal/objects"
-
-	"github.com/hajimehoshi/ebiten/v2"
 )
 
 type CollsionHandler struct {
@@ -23,10 +21,6 @@ func (ch *CollsionHandler) Update(player objects.Player) error {
 	}
 
 	return nil
-}
-
-func (ch *CollsionHandler) Draw(screen *ebiten.Image) {
-
 }
 
 func (ch *CollsionHandler) AddEntity(e objects.Entity) {

@@ -12,19 +12,25 @@ type Player struct {
 	Entity
 	IsAttacking bool
 	AttackFrame int
+	HitBox      libs.Rect
 }
 
-func NewPlayer(position libs.Vector, boundingBoxWidth, boundingBoxHeight int, animations libs.AnimationSet) *Player {
+func NewPlayer(position libs.Vector, boundingBoxWidth, boundingBoxHeight, hitBoxWidth, hitBoxHeight int, animations libs.AnimationSet) *Player {
 	return &Player{
 		Entity:      *NewEntity(position, boundingBoxWidth, boundingBoxHeight, animations),
 		IsAttacking: false,
 		AttackFrame: 0,
+		HitBox:      libs.NewRect(position.X, position.Y, float64(hitBoxWidth), float64(hitBoxHeight)),
 	}
 }
 
 func (p *Player) Update() {
 	moveInputListener(p)
 	useAttackMoves(p)
+
+	if p.Position.X != p.BoundingBox.X || p.Position.Y != p.BoundingBox.Y {
+		p.UpdateHitBox()
+	}
 
 	p.Entity.Update()
 }
@@ -110,4 +116,9 @@ func useAttackMoves(p *Player) {
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}
+}
+
+func (p *Player) UpdateHitBox() {
+	p.HitBox.X = p.Position.X
+	p.HitBox.Y = p.Position.Y
 }

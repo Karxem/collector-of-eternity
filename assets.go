@@ -27,6 +27,7 @@ func init() {
 
 	SkeletonAnimations = *libs.NewAnimationSet()
 	SkeletonAnimations.AddAnimation("idle", *libs.NewAnimation(LoadImage("Characters/Skeleton/Skeleton-Idle.png"), libs.FrameData{FrameCount: 6, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
+	SkeletonAnimations.AddAnimation("hurt", *libs.NewAnimation(LoadImage("Characters/Skeleton/Skeleton-Hurt.png"), libs.FrameData{FrameCount: 4, FrameOX: 0, FrameOY: 0, FrameWidth: 100, FrameHeight: 100, ScaleFactor: 4}))
 }
 
 func LoadImage(path string) *ebiten.Image {

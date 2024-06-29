@@ -37,7 +37,7 @@ type TestScene struct {
 }
 
 func NewTestScene() *TestScene {
-	player := objects.NewPlayer(libs.Vector{X: float64(400 - (100*4)/2), Y: float64(300 - (100*4)/2)}, 50, 50, 80, 80, assets.PlayerAnimations)
+	player := objects.NewPlayer(libs.Vector{X: float64(400 - (100*4)/2), Y: float64(300 - (100*4)/2)}, 50, 50, 80, 80, assets.KnightAnimations)
 	skeleton := objects.NewEntity(libs.Vector{X: float64(600 - (100*4)/2), Y: float64(300 - (100*4)/2)}, 50, 50, assets.SkeletonAnimations)
 	skeleton2 := objects.NewEntity(libs.Vector{X: float64(400 - (100*4)/2), Y: float64(100 - (100*4)/2)}, 50, 50, assets.SkeletonAnimations)
 	collisionHandler := systems.NewCollisionHandler()

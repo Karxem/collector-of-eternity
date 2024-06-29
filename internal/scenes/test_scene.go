@@ -29,11 +29,11 @@ var GroundMap = [][]int{
 
 type TestScene struct {
 	Dungeon
-	Player           objects.Player
-	Skeleton         objects.Entity
-	Skeleton2        objects.Entity
-	CollisionHandler systems.CollsionHandler
-	AttackHandle     systems.AttackHandler
+	Player           *objects.Player
+	Skeleton         *objects.Entity
+	Skeleton2        *objects.Entity
+	CollisionHandler *systems.CollisionHandler
+	AttackHandler    *systems.AttackHandler
 }
 
 func NewTestScene() *TestScene {
@@ -47,19 +47,18 @@ func NewTestScene() *TestScene {
 	tileMaps.AddTileMap(GroundMap)
 	tileMaps.AddTileMap(TileMap)
 
-	collisionHandler.AddEntity(*skeleton)
-	collisionHandler.AddEntity(*skeleton2)
-
-	attackHandler.AddEntity(*skeleton)
-	attackHandler.AddEntity(*skeleton2)
+	attackHandler.AddEntity(skeleton)
+	attackHandler.AddEntity(skeleton2)
+	collisionHandler.AddEntity(skeleton)
+	collisionHandler.AddEntity(skeleton2)
 
 	return &TestScene{
 		Dungeon:          *NewDungeon("S", 100, tileMaps),
-		Player:           *player,
-		Skeleton:         *skeleton,
-		Skeleton2:        *skeleton2,
-		CollisionHandler: *collisionHandler,
-		AttackHandle:     *attackHandler,
+		Player:           player,
+		Skeleton:         skeleton,
+		Skeleton2:        skeleton2,
+		CollisionHandler: collisionHandler,
+		AttackHandler:    attackHandler,
 	}
 }
 
@@ -68,8 +67,8 @@ func (s *TestScene) Update() error {
 	s.Skeleton.Update()
 	s.Skeleton2.Update()
 
-	s.CollisionHandler.Update(s.Player)
-	s.AttackHandle.Update(s.Player)
+	s.CollisionHandler.Update(*s.Player)
+	s.AttackHandler.Update(*s.Player)
 
 	return nil
 }

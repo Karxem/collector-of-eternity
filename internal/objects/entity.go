@@ -15,6 +15,7 @@ type Entity struct {
 	AnimationFrame   int
 	Animations       libs.AnimationSet
 	Direction        int
+	IsDamaged        bool
 }
 
 func NewEntity(position libs.Vector, boundingBoxWidth, boundingBoxHeight int, animations libs.AnimationSet) *Entity {
@@ -25,6 +26,7 @@ func NewEntity(position libs.Vector, boundingBoxWidth, boundingBoxHeight int, an
 		CurrentAnimation: animations.Animations["idle"],
 		AnimationFrame:   0,
 		Direction:        1,
+		IsDamaged:        false,
 	}
 }
 
@@ -63,4 +65,19 @@ func (e *Entity) Draw(screen *ebiten.Image) {
 func (e *Entity) UpdateBoundingBox() {
 	e.BoundingBox.X = e.Position.X
 	e.BoundingBox.Y = e.Position.Y
+}
+
+func (e *Entity) TakeDamage() {
+	if e.IsDamaged {
+		for i := 0; i <= e.CurrentAnimation.FrameCount*2; i++ {
+			e.IsDamaged = false
+			e.CurrentAnimation = e.Animations.Animations["idle"]
+		}
+		return
+	}
+
+	if val, ok := e.Animations.Animations["hurt"]; ok {
+		e.CurrentAnimation = val
+	}
+	e.IsDamaged = true
 }

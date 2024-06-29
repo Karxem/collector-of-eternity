@@ -5,15 +5,15 @@ import (
 	"pick-it-up/internal/objects"
 )
 
-type CollsionHandler struct {
-	Entities []objects.Entity
+type CollisionHandler struct {
+	Entities []*objects.Entity
 }
 
-func NewCollisionHandler() *CollsionHandler {
-	return &CollsionHandler{}
+func NewCollisionHandler() *CollisionHandler {
+	return &CollisionHandler{}
 }
 
-func (ch *CollsionHandler) Update(player objects.Player) error {
+func (ch *CollisionHandler) Update(player objects.Player) error {
 	for i, m := range ch.Entities {
 		if player.BoundingBox.Intersects(m.BoundingBox) {
 			log.Println("Intersected with entity:", i)
@@ -23,6 +23,6 @@ func (ch *CollsionHandler) Update(player objects.Player) error {
 	return nil
 }
 
-func (ch *CollsionHandler) AddEntity(e objects.Entity) {
+func (ch *CollisionHandler) AddEntity(e *objects.Entity) {
 	ch.Entities = append(ch.Entities, e)
 }

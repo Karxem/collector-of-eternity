@@ -15,7 +15,7 @@ const (
 func main() {
 	g := game.NewGame()
 	ebiten.SetWindowSize(ScreenWidth*2, ScreenHeight*2)
-	ebiten.SetWindowTitle("Pick it up!")
+	ebiten.SetWindowTitle("Collector of Eternity")
 
 	if err := ebiten.RunGame(g); err != nil {
 		log.Fatal(err)

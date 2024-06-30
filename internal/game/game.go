@@ -11,8 +11,8 @@ type Game struct {
 }
 
 func NewGame() *Game {
-	testScene := scenes.NewTestScene()
-	sceneManager := scenes.NewSceneManager(testScene)
+	menuScene := scenes.NewMenuScene()
+	sceneManager := scenes.NewSceneManager(menuScene)
 	return &Game{
 		SceneManager: *sceneManager,
 	}
@@ -20,6 +20,9 @@ func NewGame() *Game {
 }
 
 func (g *Game) Update() error {
+	if ebiten.IsKeyPressed(ebiten.KeyEnter) {
+		g.SceneManager.SetScene(scenes.NewTestScene())
+	}
 	return g.SceneManager.Update()
 }
 

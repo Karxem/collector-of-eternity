@@ -1,12 +1,14 @@
 package scenes
 
 import (
+	"fmt"
 	assets "pick-it-up"
 	"pick-it-up/internal/libs"
 	"pick-it-up/internal/objects"
 	"pick-it-up/internal/systems"
 
 	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
 
 var TileMap = [][]int{
@@ -28,6 +30,7 @@ var GroundMap = [][]int{
 }
 
 type TestScene struct {
+	Scene
 	Dungeon
 	Player           *objects.Player
 	Skeleton         *objects.Entity
@@ -79,4 +82,9 @@ func (s *TestScene) Draw(screen *ebiten.Image) {
 	s.Skeleton.Draw(screen)
 	s.Orc.Draw(screen)
 	s.Player.Draw(screen)
+
+	fps := fmt.Sprintf("%f", ebiten.ActualFPS())
+	tps := fmt.Sprintf("%f", ebiten.ActualTPS())
+	ebitenutil.DebugPrintAt(screen, "FPS: "+fps, 10, 10)
+	ebitenutil.DebugPrintAt(screen, "TPS: "+tps, 10, 30)
 }

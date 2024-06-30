@@ -1,6 +1,8 @@
 package scenes
 
 import (
+	"fmt"
+
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 )
@@ -18,5 +20,9 @@ func (s *MenuScene) Update() error {
 }
 
 func (s *MenuScene) Draw(screen *ebiten.Image) {
-	ebitenutil.DebugPrint(screen, "Menu Scene - Press ENTER to start")
+	ebitenutil.DebugPrintAt(screen, "       Collector of Eternity\nMenu Scene - Press ENTER to start", 400, 280)
+	fps := fmt.Sprintf("%f", ebiten.ActualFPS())
+	tps := fmt.Sprintf("%f", ebiten.ActualTPS())
+	ebitenutil.DebugPrintAt(screen, "FPS: "+fps, 10, 10)
+	ebitenutil.DebugPrintAt(screen, "TPS: "+tps, 10, 30)
 }

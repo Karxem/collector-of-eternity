@@ -12,10 +12,6 @@ Choosing a more light engine gives the opportunity to learn concepts from ground
 
 Go got similiar benchmarks to compiled languages like C or C++, but has the simplicity of a garbage collected language.
 
-# Composition over Inheritance
-There are no classes in go and you can say, that there is no inheritance concept in either.
-Go uses a concept called composition where a struct is used to form other objects.
-
 ## Running the Game
 
 ### Prerequisites
@@ -35,11 +31,13 @@ Before running the game, ensure you have the following installed:
 
 2. **Run the game:**
 
+   When using vs code you can run the "Run Game" Task or press Crtl+Shift+B
+
+   Alternetivly you can run this command which will run the game.
    ```bash
-   go run .
+   go run cmd/.
    ```
 
-   This command will build and start the game.
 
 3. **Build for release:**
 
@@ -47,7 +45,7 @@ Before running the game, ensure you have the following installed:
    go build -o ../dist/collector-of-eternity.exe
    ```
 
-   This command will compile the project to the dist folder.
+   This command will compile the project to the dist folder as an exe.
 
 ## Contributing
 

@@ -3,6 +3,7 @@ package objects
 import (
 	"image"
 	"pick-it-up/internal/libs"
+	"pick-it-up/internal/objects/states"
 
 	"github.com/hajimehoshi/ebiten/v2"
 )
@@ -16,6 +17,7 @@ type Entity struct {
 	Animations       libs.AnimationSet
 	Direction        int
 	IsDamaged        bool
+	CurrentState     states.State
 }
 
 func NewEntity(position libs.Vector, boundingBoxWidth, boundingBoxHeight int, animations libs.AnimationSet) *Entity {
@@ -27,6 +29,7 @@ func NewEntity(position libs.Vector, boundingBoxWidth, boundingBoxHeight int, an
 		AnimationFrame:   0,
 		Direction:        1,
 		IsDamaged:        false,
+		CurrentState:     states.Idle,
 	}
 }
 
@@ -34,8 +37,18 @@ func (e *Entity) Update() {
 	e.AnimationFrame++
 	e.AnimationFrame %= e.CurrentAnimation.FrameCount * 5
 
-	if e.Position.X != e.BoundingBox.X || e.Position.Y != e.BoundingBox.Y {
-		e.UpdateBoundingBox()
+	// TODO: Update bounding box when player is moving
+	// e.UpdateBoundingBox()
+
+	switch e.CurrentState {
+	case states.Idle:
+		e.CurrentAnimation = e.Animations.Animations["idle"]
+	case states.Hurt:
+		e.CurrentAnimation = e.Animations.Animations["hurt"]
+	case states.Walk:
+		e.CurrentAnimation = e.Animations.Animations["walk"]
+	case states.Attack:
+		e.CurrentAnimation = e.Animations.Animations["primary-attack"]
 	}
 
 	// log.Printf("Position: (%f, %f), Frame: %d", e.Position.X, e.Position.Y, e.AnimationFrame)
@@ -65,19 +78,4 @@ func (e *Entity) Draw(screen *ebiten.Image) {
 func (e *Entity) UpdateBoundingBox() {
 	e.BoundingBox.X = e.Position.X
 	e.BoundingBox.Y = e.Position.Y
-}
-
-func (e *Entity) TakeDamage() {
-	if e.IsDamaged {
-		for i := 0; i <= e.CurrentAnimation.FrameCount*2; i++ {
-			e.IsDamaged = false
-			e.CurrentAnimation = e.Animations.Animations["idle"]
-		}
-		return
-	}
-
-	if val, ok := e.Animations.Animations["hurt"]; ok {
-		e.CurrentAnimation = val
-	}
-	e.IsDamaged = true
 }

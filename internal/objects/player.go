@@ -3,6 +3,7 @@ package objects
 import (
 	"math"
 	"pick-it-up/internal/libs"
+	"pick-it-up/internal/objects/states"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -40,11 +41,7 @@ func (p *Player) Draw(screen *ebiten.Image) {
 }
 
 func moveInputListener(p *Player) {
-	/*
-		TODO: This prevents the current animation to get set to idle when not moving.
-			   The current state of the player should be handled by something like state machine that prevents inputs on certain states.
-	*/
-	if p.IsAttacking {
+	if p.CurrentState == states.Attack {
 		return
 	}
 
@@ -54,10 +51,6 @@ func moveInputListener(p *Player) {
 	if ebiten.IsKeyPressed(ebiten.KeyW) {
 		delta.Y = -speed
 	}
-	if ebiten.IsKeyPressed(ebiten.KeyA) {
-		delta.X = -speed
-		p.Direction = -1
-	}
 	if ebiten.IsKeyPressed(ebiten.KeyS) {
 		delta.Y = speed
 	}
@@ -65,26 +58,30 @@ func moveInputListener(p *Player) {
 		delta.X = speed
 		p.Direction = 1
 	}
+	if ebiten.IsKeyPressed(ebiten.KeyA) {
+		delta.X = -speed
+		p.Direction = -1
+	}
 
+	if delta.X == 0 && delta.Y == 0 {
+		p.CurrentState = states.Idle
+		return
+	}
+
+	// Diagonal movement calculation
 	if delta.X != 0 && delta.Y != 0 {
 		factor := speed / math.Sqrt(delta.X*delta.X+delta.Y*delta.Y)
 		delta.X *= factor
 		delta.Y *= factor
 	}
 
-	// Sets either walk or idle animation wether the player is moving or not
-	if delta.X != 0 || delta.Y != 0 {
-		p.CurrentAnimation = p.Animations.Animations["walk"]
-	} else {
-		p.CurrentAnimation = p.Animations.Animations["idle"]
-	}
-
 	p.Position.X += delta.X
 	p.Position.Y += delta.Y
+	p.CurrentState = states.Walk
 }
 
 func useAttackMoves(p *Player) {
-	if p.IsAttacking {
+	if p.CurrentState == states.Attack {
 		p.AttackFrame++
 
 		p.AnimationFrame++ // Increment animation frame
@@ -93,26 +90,29 @@ func useAttackMoves(p *Player) {
 		var animFrames = p.CurrentAnimation.FrameCount
 		if p.AttackFrame >= animFrames*2 {
 			p.IsAttacking = false
-			p.CurrentAnimation = p.Animations.Animations["idle"]
+			p.CurrentState = states.Idle
 		}
 		return
 	}
 
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
 		p.IsAttacking = true
-		p.CurrentAnimation = p.Animations.Animations["primary-attack"]
+		p.CurrentState = states.Attack
+
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonRight) {
 		p.IsAttacking = true
-		p.CurrentAnimation = p.Animations.Animations["secondary-attack"]
+		p.CurrentState = states.Attack
+
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}
 	if inpututil.IsKeyJustReleased(ebiten.KeySpace) {
 		p.IsAttacking = true
-		p.CurrentAnimation = p.Animations.Animations["heavy-attack"]
+		p.CurrentState = states.Attack
+
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}

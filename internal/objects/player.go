@@ -41,10 +41,6 @@ func (p *Player) Draw(screen *ebiten.Image) {
 }
 
 func moveInputListener(p *Player) {
-	/*
-		TODO: This prevents the current animation to get set to idle when not moving.
-			   The current state of the player should be handled by something like state machine that prevents inputs on certain states.
-	*/
 	if p.CurrentState == states.Attack {
 		return
 	}
@@ -85,7 +81,7 @@ func moveInputListener(p *Player) {
 }
 
 func useAttackMoves(p *Player) {
-	if p.IsAttacking {
+	if p.CurrentState == states.Attack {
 		p.AttackFrame++
 
 		p.AnimationFrame++ // Increment animation frame
@@ -94,26 +90,29 @@ func useAttackMoves(p *Player) {
 		var animFrames = p.CurrentAnimation.FrameCount
 		if p.AttackFrame >= animFrames*2 {
 			p.IsAttacking = false
-			p.CurrentAnimation = p.Animations.Animations["idle"]
+			p.CurrentState = states.Idle
 		}
 		return
 	}
 
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonLeft) {
 		p.IsAttacking = true
-		p.CurrentAnimation = p.Animations.Animations["primary-attack"]
+		p.CurrentState = states.Attack
+
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}
 	if inpututil.IsMouseButtonJustReleased(ebiten.MouseButtonRight) {
 		p.IsAttacking = true
-		p.CurrentAnimation = p.Animations.Animations["secondary-attack"]
+		p.CurrentState = states.Attack
+
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}
 	if inpututil.IsKeyJustReleased(ebiten.KeySpace) {
 		p.IsAttacking = true
-		p.CurrentAnimation = p.Animations.Animations["heavy-attack"]
+		p.CurrentState = states.Attack
+
 		p.AttackFrame = 0 // Reset the attack frame counter
 		p.Entity.AnimationFrame = 0
 	}
